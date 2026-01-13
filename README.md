@@ -1,4 +1,4 @@
-# Parking Space Detection Using Computer Vision and Deep Learning
+# Parking Space Detection Using Computer Vision and Deep Learning (Comparison Between Object Detection and Object Classification Methods)
 
 This project aims to enhance parking space detection through computer vision, deep learning, and a novel boundary comparison method. Multiple state-of-the-art algorithms are evaluated for accuracy and efficiency, including detection models (RetinaNet, SSD, YOLO8, YOLO9) and classification models (ResNet50, VGG16, AlexNet, MobileNet).
 
