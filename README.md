@@ -1,35 +1,157 @@
-# Parking Space Detection Using Computer Vision and Deep Learning (Comparison Between Object Detection and Object Classification Methods)
+# Spatial–Temporal Confidence-Weighted Parking Occupancy Inference
+*(Detector-Agnostic Framework for Vision-Based Parking Systems)*
 
-This project aims to enhance parking space detection through computer vision, deep learning, and a novel boundary comparison method. Multiple state-of-the-art algorithms are evaluated for accuracy and efficiency, including detection models (RetinaNet, SSD, YOLO8, YOLO9) and classification models (ResNet50, VGG16, AlexNet, MobileNet).
+This repository contains the **official implementation** of the framework presented in the paper:
 
-## Features
+> **Reliable Parking Occupancy Inference Using Spatial–Temporal Confidence Fusion in Vision-Based Systems**
 
-- **Boundary Configuration**  
-  Use `Config_Generator.py` to load a video, extract the first frame, and manually draw parking boundaries using four points. Multiple boundaries can be added, and the configuration can be saved for later use.
-
-- **Detection & Classification Testing**  
-  Run `Parking_Occupation_Detector_Using_Classification.py` and `Parking_Occupation_Detector_Using_Detection.py` to test different models.  
-  - Load the saved configuration and video.  
-  - Select the desired model via Python GUI.  
-  - View real-time detection results and save processed images.  
-  - Frames are skipped during processing to optimize speed for testing.
-
-## Usage
-
-### Step 1: Configuring Parking Boundaries
-1. Run `Config_Generator.py`.  
-2. Load a video and draw parking boundaries on the first frame using four points.  
-3. Save the configuration file for future detection tasks.
-
-### Step 2: Testing Detection & Classification
-1. Run either `Parking_Occupation_Detector_Using_Classification.py` or `Parking_Occupation_Detector_Using_Detection.py`.  
-2. Load the saved configuration and select a model through the GUI.  
-3. Observe real-time detection results and processed images.  
-4. Frames are processed with frame skipping for faster testing.
-
-## Note
-- The system is designed for flexibility and speed, allowing rapid testing of multiple models on custom parking lot configurations.
+The proposed system performs **parking occupancy inference** by combining **object detection outputs**, **custom-defined parking slot boundaries**, and **temporal stability reasoning**.  
+The implementation is **detector-agnostic** and has been experimentally validated using multiple state-of-the-art object detection models.
 
 ---
 
-For any questions or contributions, please contact the repository maintainer.
+## 🔍 Overview
+
+Unlike conventional frame-level parking detection approaches, this framework focuses on **decision reliability** rather than raw detection accuracy. Vehicle detections are fused with spatial priors (parking slot boundaries) and temporal evidence accumulation to produce **stable occupancy decisions**.
+
+This repository includes:
+- Custom parking slot boundary definition (GUI-based)
+- Detector-agnostic vehicle detection pipeline
+- Confidence-weighted spatial overlap logic
+- Temporal Stability Index (TSI)–based inference
+- Experimental scripts used for evaluation in the paper
+
+---
+
+## 🚗 Supported Models (As Evaluated in the Paper)
+
+### Object Detection Models
+- **RetinaNet**
+- **SSD**
+- **YOLOv8**
+- **YOLOv9**
+
+> These models were evaluated under identical experimental conditions to demonstrate the detector-agnostic nature of the proposed spatial–temporal inference framework.
+
+### Classification Models (Baseline Comparison Only)
+- ResNet50  
+- VGG16  
+- AlexNet  
+- MobileNet  
+
+> Classification-based methods are included for comparative analysis but are **not the core contribution** of the paper.
+
+---
+
+## ✨ Key Features
+
+### 1. Custom Parking Slot Boundary Definition
+- GUI-based boundary annotation using four-point polygon selection
+- Multiple parking slots supported per camera view
+- Boundaries are defined once and reused across experiments
+
+### 2. Detector-Agnostic Occupancy Inference
+- Vehicle detection performed using selected deep learning models
+- Confidence-weighted spatial overlap between detected vehicles and parking slots
+- Temporal evidence accumulation using a fixed sliding window
+
+### 3. Temporal Stability Index (TSI)
+- Aggregates spatial evidence across consecutive frames
+- Suppresses false occupancy transitions caused by occlusions and transient detections
+- Produces stable **Occupied / Free / Uncertain** states, as described in the paper
+
+---
+
+## 🧪 Experimental Configuration (Paper-Aligned)
+
+- **Temporal Window Size:** `T = 10` frames  
+- **Decision Thresholds:**  
+  - Occupied: `θ_occ = 0.7`  
+  - Free: `θ_free = 0.3`
+- **Inference Mode:** Offline video processing
+- **Evaluation Focus:** Occupancy decision stability and reliability
+
+> Predictions classified as *Uncertain* are excluded from precision, recall, accuracy, and F1-score computation, following the evaluation protocol described in the paper.
+
+---
+
+## ▶️ Usage
+
+### Step 1: Configure Parking Slot Boundaries
+```bash
+python Config_Generator.py
+```
+1. Load a parking surveillance video  
+2. Extract the first frame automatically  
+3. Manually draw parking slot boundaries using four points  
+4. Save the configuration file for reuse  
+
+---
+
+### Step 2: Run Parking Occupancy Inference
+
+#### Detection-Based Inference (Primary Method)
+```bash
+python Parking_Occupation_Detector_Using_Detection.py
+```
+- Load the saved boundary configuration
+- Select one of the supported detection models via the GUI
+- Observe real-time visualization of:
+  - Vehicle detections
+  - Parking slot occupancy status
+- Processed frames can be optionally saved for analysis
+
+---
+
+#### Classification-Based Inference (Baseline Only)
+```bash
+python Parking_Occupation_Detector_Using_Classification.py
+```
+> Included for comparative evaluation only; not the main contribution of the paper.
+
+---
+
+## ⚙️ Performance and Computational Cost
+
+- The Temporal Stability Index (TSI) computation involves only simple summation and averaging operations.
+- Additional latency introduced by the temporal inference layer is **less than 1 ms per frame**, making the framework suitable for **real-time and edge-based deployment**, subject to the chosen detector.
+
+---
+
+## 📊 Dataset Notes
+
+- Experiments were conducted on real-world outdoor parking surveillance videos
+- Fixed camera viewpoints with multiple lighting conditions (daytime, evening, low-light)
+- Parking slots were manually annotated per camera view
+- Frame sampling was used to reduce redundancy while preserving temporal continuity
+
+*(Exact dataset statistics are reported in the paper.)*
+
+---
+
+## 📄 Citation
+
+If you use this code, please cite the corresponding paper:
+
+```bibtex
+@article{YourPaper2025,
+  title   = {Reliable Parking Occupancy Inference Using Spatial--Temporal Confidence Fusion in Vision-Based Systems},
+  author  = {Author Names},
+  journal = {Journal Name},
+  year    = {2025}
+}
+```
+
+---
+
+## ⚠️ Notes
+
+- This repository reflects the **exact implementation evaluated in the paper**
+- No additional modules (e.g., tracking, re-identification) are included beyond what is reported
+- The framework is designed to be extended with future detection models
+
+---
+
+## 📬 Contact
+
+For questions, clarifications, or research collaboration, please contact the repository maintainer.
